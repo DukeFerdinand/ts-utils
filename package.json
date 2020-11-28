@@ -1,6 +1,6 @@
 {
   "name": "@dukeferdinand/ts-utils",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A collection of typed utils and classes geared towards my own use",
   "main": "dist/index.js",
   "author": "Doug Flynn <DougFlynnDevelopment@gmail.com>",
