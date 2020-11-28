@@ -1,5 +1,7 @@
 import { Err, Ok } from '@dukeferdinand/ts-results'
-import { clone, wrapped } from '../lib/sync'
+import { Sync } from '../lib/'
+
+const { clone, wrapped } = Sync
 
 describe('Clone util', () => {
   it('clones a full object', () => {
