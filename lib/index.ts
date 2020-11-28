@@ -1,1 +1,2 @@
-console.info('[UTILS] Placeholder for new util lib')
+export declare type Nullable<T> = T | null;
+export declare type Optional<T> = T | undefined;
