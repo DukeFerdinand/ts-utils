@@ -1,6 +1,6 @@
 {
   "name": "@dukeferdinand/ts-utils",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A collection of typed utils and classes geared towards my own use",
   "main": "dist/index.js",
   "author": "Doug Flynn <DougFlynnDevelopment@gmail.com>",
@@ -16,7 +16,8 @@
     "test": "jest",
     "test-watch": "jest --verbose --watch",
     "build": "tsc",
-    "start": "tsc --watch"
+    "start": "tsc --watch",
+    "deploy": "yarn build && yarn publish"
   },
   "dependencies": {
     "@dukeferdinand/ts-results": "^0.1.1"
