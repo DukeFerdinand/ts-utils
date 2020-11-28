@@ -1,3 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Clone util throws error when passed a function 1`] = `"[ Clone Error ] Cannot clone a function"`;
+exports[`Clone util throws error when passed a function 1`] = `"[ Clone Error ] Cannot clone a function yet"`;
