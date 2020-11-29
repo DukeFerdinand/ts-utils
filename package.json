@@ -1,6 +1,6 @@
 {
   "name": "@dukeferdinand/ts-utils",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A collection of typed utils and classes geared towards my own use",
   "main": "dist/index.js",
   "author": "Doug Flynn <DougFlynnDevelopment@gmail.com>",
@@ -27,7 +27,7 @@
     "build": "tsc --project tsconfig.prod.json",
     "start": "tsc --watch",
     "deploy": "yarn build && yarn publish",
-    "_postinstall": "is-ci || husky install",
+    "postinstall": "is-ci || husky install",
     "prepublish": "pinst --disable",
     "postpublish": "pinst --enable"
   },
