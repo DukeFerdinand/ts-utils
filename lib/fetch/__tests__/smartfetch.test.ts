@@ -80,4 +80,34 @@ describe('SmartFetch http client wrapper', () => {
     expect(shouldNOTError).toBeInstanceOf(Ok)
 
   })
+
+  it('handles unexpected/critical errors', async () => {
+    const { smartFetch } = SmartFetch
+
+    fetchMock.mockRejectOnce(new Error('Testing when something breaks'))
+    const shouldCatch = await smartFetch(SmartFetch.RequestMethods.GET, '/bad-route')
+
+    expect(shouldCatch).toBeInstanceOf(Err)
+    expect((shouldCatch.unwrapErr() as Error).message).toBe('Testing when something breaks')
+  })
+
+  it('catches errors from broken filter functions', async () => {
+    const { smartFetch } = SmartFetch
+
+    function shouldThrow(res: unknown) {
+      throw new Error('[ smartFetch ] Something went very wrong')
+      if (res) {
+        return true
+      }
+      return false
+    }
+
+    fetchMock.mockResponseOnce(JSON.stringify({ error: 'unrecoverable' }), { status: 200, headers: { 'content-type': 'application/json' } })
+    const res = await smartFetch<{ error: string }, Error>(SmartFetch.RequestMethods.GET, '/bad-route', null, {
+      shouldThrow
+    })
+
+    expect(res).toBeInstanceOf(Err)
+    expect((res.unwrapErr() as Error).message).toBe('[ smartFetch ] Something went very wrong')
+  })
 })
