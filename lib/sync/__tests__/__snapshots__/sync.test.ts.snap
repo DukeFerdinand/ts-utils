@@ -1,3 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Clone util throws error when passed a function 1`] = `"[ Clone Error ] Cannot clone a function yet"`;
+
+exports[`ToString util throws an error when given function 1`] = `"[ ToString Error ] Cannot reliably stringify function"`;

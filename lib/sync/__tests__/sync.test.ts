@@ -1,7 +1,7 @@
 import { Err, Ok } from '@dukeferdinand/ts-results'
 import { Sync } from '../..'
 
-const { clone, wrapped } = Sync
+const { clone, wrapped, toString } = Sync
 
 describe('Clone util', () => {
   it('clones a full object', () => {
@@ -27,6 +27,27 @@ describe('Clone util', () => {
       return 1
     }
     expect(() => clone(dontCloneMe)).toThrowErrorMatchingSnapshot()
+  })
+})
+
+describe('ToString util', () => {
+  it('throws an error when given function', () => {
+    const f = () => "Don't stringify me!"
+
+    expect(() => toString(f)).toThrowErrorMatchingSnapshot()
+
+    // Stringifying a string will cause things like escaping quotes
+    expect(toString(f())).toBe("\"Don't stringify me!\"")
+  })
+
+  it('correctly stringifies complex data', () => {
+    const complex = {
+      emptyKey: '',
+      exampleArr: [0, 1, 2],
+      exampleObj: { sub: 'test', subEmpty: '' }
+    }
+    const str = toString(complex)
+    expect(str).toEqual('{"emptyKey":"","exampleArr":[0,1,2],"exampleObj":{"sub":"test","subEmpty":""}}')
   })
 })
 

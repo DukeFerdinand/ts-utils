@@ -10,6 +10,14 @@ export namespace Sync {
     return JSON.parse(JSON.stringify(data))
   }
 
+  export function toString(data: any): string {
+    if (typeof data === 'function') {
+      throw new TypeError('[ ToString Error ] Cannot reliably stringify function')
+    }
+
+    return JSON.stringify(data)
+  }
+
   export function wrapped<T, E extends Error, F extends Function>(fn: F): () => Result<T, E> {
     return function (): Result<T, E> {
       try {
