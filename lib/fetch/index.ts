@@ -30,9 +30,7 @@ export namespace SmartFetch {
   }
 
 
-  export async function smartFetch<T, E>(
-    method: RequestMethods, url: string, body?: any, config: GlobalConfig = {}
-  ): Promise<Result<T, E>> {
+  export async function smartFetch<T, E>(method: RequestMethods, url: string, body?: any, config: GlobalConfig = {}): Promise<Result<T, E>> {
     const { shouldThrow, ...local } = config
     if (!window) {
       throw new Error('[ Smart Fetch ] Warning: cannot find window object. Isomorphic and other server side implementations are not available yet.')
@@ -44,9 +42,7 @@ export namespace SmartFetch {
       localConfig = { ...window.__SMART_FETCH_CONFIG__, ...localConfig }
     }
 
-    if (body) {
-      localConfig = { ...localConfig, body: toString(body) }
-    }
+    if (body) { localConfig = { ...localConfig, body: toString(body) } }
 
     try {
       // Actual fetch call
