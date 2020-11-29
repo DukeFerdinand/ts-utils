@@ -1,5 +1,7 @@
 ## @dukeferdinand/ts-utils
 
+[![Build Status](https://travis-ci.com/DukeFerdinand/ts-utils.svg?branch=master)](https://travis-ci.com/DukeFerdinand/ts-utils) [![Maintainability](https://api.codeclimate.com/v1/badges/7c69c117fb3652083d1c/maintainability)](https://codeclimate.com/github/DukeFerdinand/ts-utils/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/7c69c117fb3652083d1c/test_coverage)](https://codeclimate.com/github/DukeFerdinand/ts-utils/test_coverage)
+
 Welcome to my library!
 
 If you're reading this you're probably looking for a small, easy to use library without a lot of frills, and with first class TypeScript support.
