@@ -62,7 +62,8 @@
     // Manually defined
     "baseUrl": "lib",
     "types": [
-      "jest"
+      "jest",
+      "node"
     ],
     "declaration": true,
     "declarationDir": "dist/types",
