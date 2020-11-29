@@ -1,5 +1,5 @@
 import { Err, Ok } from '@dukeferdinand/ts-results'
-import { Sync } from '../lib/'
+import { Sync } from '../..'
 
 const { clone, wrapped } = Sync
 

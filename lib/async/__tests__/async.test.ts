@@ -1,5 +1,5 @@
 import { Err, Ok } from '@dukeferdinand/ts-results'
-import { Async } from '../lib/async'
+import { Async } from '..'
 
 const { asyncWrapped } = Async
 
