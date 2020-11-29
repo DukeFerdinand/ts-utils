@@ -30,7 +30,7 @@ export namespace SmartFetch {
   }
 
 
-  export async function smartFetch<T, E extends Error>(
+  export async function smartFetch<T, E>(
     method: RequestMethods, url: string, body?: any, config: GlobalConfig = {}
   ): Promise<Result<T, E>> {
     const { shouldThrow, ...local } = config
