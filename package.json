@@ -23,7 +23,7 @@
     "test": "jest",
     "test-coverage": "jest --coverage",
     "test-watch": "jest --verbose --watch",
-    "lint": "eslint",
+    "lint": "eslint lib/",
     "build": "tsc --project tsconfig.prod.json",
     "start": "tsc --watch",
     "deploy": "yarn build && yarn publish",
