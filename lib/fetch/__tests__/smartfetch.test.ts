@@ -7,7 +7,7 @@ import { Err, Ok } from '@dukeferdinand/ts-results'
 import { enableFetchMocks } from 'jest-fetch-mock'
 enableFetchMocks()
 
-import { SmartFetch } from '..'
+import * as SmartFetch from '..'
 
 describe('SmartFetch config utils', () => {
   beforeEach(() => {
