@@ -3,6 +3,8 @@ node_js:
   - 15
 jobs:
   include:
+    - stage: lint
+      script: yarn lint
     - stage: test
       script: yarn test
     - stage: coverage
