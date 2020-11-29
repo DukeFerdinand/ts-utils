@@ -56,7 +56,7 @@ describe('SmartFetch http client wrapper', () => {
     fetchMock.mockResponseOnce(JSON.stringify({ error: 'Message here' }), { status: 200, headers: { 'content-type': 'application/json' } })
 
     // Mock example to catch any response with an 'error' key, but only if 'error' is not an empty string
-    function shouldThrow(res: { [index: string]: any }) {
+    function shouldThrow(res: { [index: string]: unknown }) {
       if (Object.keys(res).includes('error') && res.error !== '') {
         return true
       }

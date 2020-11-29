@@ -1,8 +1,6 @@
 import { err, ok, Result } from "@dukeferdinand/ts-results";
 
-import { Sync } from '../sync'
-
-const { toString } = Sync
+import { toString } from '../sync'
 
 
 export interface GlobalConfig<T = unknown> extends Omit<RequestInit, "body" | "method"> {
