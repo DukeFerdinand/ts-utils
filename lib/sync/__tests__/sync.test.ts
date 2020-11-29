@@ -35,9 +35,11 @@ describe('ToString util', () => {
     const f = () => "Don't stringify me!"
 
     expect(() => toString(f)).toThrowErrorMatchingSnapshot()
+  })
 
+  it('correctly handles strings', () => {
     // Stringifying a string will cause things like escaping quotes
-    expect(toString(f())).toBe("\"Don't stringify me!\"")
+    expect(toString("Don't stringify me!")).toBe("\"Don't stringify me!\"")
   })
 
   it('correctly stringifies complex data', () => {
