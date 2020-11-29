@@ -29,39 +29,25 @@ export function getSmartFetchConfig(): GlobalConfig {
 
 export async function smartFetch<T, E>(method: RequestMethods, url: string, body?: unknown, config: GlobalConfig<T | E> = {}): Promise<Result<T, E>> {
   const { shouldThrow, ...local } = config
-  if (!window) {
-    throw new Error('[ Smart Fetch ] Warning: cannot find window object. Isomorphic and other server side implementations are not available yet.')
-  }
 
-  let localConfig: GlobalConfig & RequestInit = { ...local, method }
-  if (window && window.__SMART_FETCH_CONFIG__) {
-    // local will always override global unless otherwise allowed in the future
-    localConfig = { ...window.__SMART_FETCH_CONFIG__, ...localConfig }
-  }
+  // local will always override global unless otherwise allowed in the future
+  let localConfig: GlobalConfig & RequestInit = { ...window?.__SMART_FETCH_CONFIG__, ...local, method }
 
   if (body) { localConfig = { ...localConfig, body: toString(body) } }
 
   try {
     // Actual fetch call
     const res = await fetch(url, localConfig)
+    const parsed: T | E = await res.json()
 
-    // Res isn't a 400, 500, or other standard error
-    if (res.ok) {
-      const parsed: T | E = await res.json()
-
-      // Custom error parser in case you need 200 but have an `error` key or similar need
-      if (shouldThrow && shouldThrow(parsed)) {
-        return err<E>(parsed as E)
-      }
-
+    // Res isn't a 400, 500, or other custom error
+    if (res.ok && !(shouldThrow && shouldThrow(parsed))) {
       // Everything is okay, return okay data
       return ok(parsed as T)
-    } else {
-
-      // Standard HTTP error or similar bad request occurred
-      const parsed: T | E = await res.json()
-      return err<E>(parsed as E)
     }
+
+    // Something went wrong, return Err wrapped data
+    return err<E>(parsed as E)
   } catch (e) {
     // Something broke that was not able to be caught by normal means
     return err<E>(e)
