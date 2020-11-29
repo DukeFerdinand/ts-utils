@@ -18,6 +18,7 @@
   },
   "scripts": {
     "test": "jest",
+    "test-coverage": "jest --coverage",
     "test-watch": "jest --verbose --watch",
     "build": "tsc --project tsconfig.prod.json",
     "start": "tsc --watch",
