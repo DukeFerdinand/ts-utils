@@ -1,7 +1,5 @@
 import { Err, Ok } from '@dukeferdinand/ts-results'
-import { Async } from '..'
-
-const { asyncWrapped } = Async
+import { asyncWrapped } from '..'
 
 describe('Async wrapped util', () => {
   it('returns Ok wrapped values on successful calls', async () => {
