@@ -27,7 +27,7 @@ export function getSmartFetchConfig(): GlobalConfig {
 }
 
 
-export async function smartFetch<T, E>(method: RequestMethods, url: string, body?: unknown, config: GlobalConfig<T | E> = {}): Promise<Result<T, E>> {
+export async function smartFetch<T, E extends Error>(method: RequestMethods, url: string, body?: unknown, config: GlobalConfig<T | E> = {}): Promise<Result<T, E>> {
   const { shouldThrow, ...local } = config
 
   // local will always override global unless otherwise allowed in the future
