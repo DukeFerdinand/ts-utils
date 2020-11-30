@@ -1,9 +1,9 @@
-import { err, ok, Result } from "@dukeferdinand/ts-results";
+import { err, ok, Result } from '@dukeferdinand/ts-results';
 
-import { toString } from "../sync";
+import { toString } from '../sync';
 
 export interface GlobalConfig<T = unknown>
-  extends Omit<RequestInit, "body" | "method"> {
+  extends Omit<RequestInit, 'body' | 'method'> {
   baseUrl?: string;
   shouldThrow?: (response: T) => boolean;
 }
@@ -11,11 +11,11 @@ export interface GlobalConfig<T = unknown>
 export type LocalConfig = RequestInit;
 
 export enum RequestMethods {
-  GET = "GET",
-  POST = "POST",
-  DELETE = "DELETE",
-  PUT = "PUT",
-  PATCH = "PATCH",
+  GET = 'GET',
+  POST = 'POST',
+  DELETE = 'DELETE',
+  PUT = 'PUT',
+  PATCH = 'PATCH',
 }
 
 export function initSmartFetch(config: GlobalConfig): void {
@@ -23,7 +23,7 @@ export function initSmartFetch(config: GlobalConfig): void {
 }
 
 export function getSmartFetchConfig(): GlobalConfig {
-  return typeof window !== "undefined" ? window.__SMART_FETCH_CONFIG__ : {};
+  return typeof window !== 'undefined' ? window.__SMART_FETCH_CONFIG__ : {};
 }
 
 export async function smartFetch<T, E extends Error>(
