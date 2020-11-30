@@ -56,7 +56,8 @@ describe('SmartFetch http client wrapper', () => {
     fetchMock.mockResponseOnce(JSON.stringify({ error: 'Message here' }), { status: 200, headers: { 'content-type': 'application/json' } })
 
     // Mock example to catch any response with an 'error' key, but only if 'error' is not an empty string
-    function shouldThrow(res: { [index: string]: unknown }) {
+    function shouldThrow(res: { [index: string]: unknown } | Error) {
+      if (res instanceof Error) return true
       if (Object.keys(res).includes('error') && res.error !== '') {
         return true
       }
@@ -79,5 +80,37 @@ describe('SmartFetch http client wrapper', () => {
 
     expect(shouldNOTError).toBeInstanceOf(Ok)
 
+  })
+
+  it('handles unexpected/critical errors', async () => {
+    const { smartFetch } = SmartFetch
+
+    fetchMock.mockRejectOnce(new Error('Testing when something breaks'))
+    const shouldCatch = await smartFetch(SmartFetch.RequestMethods.GET, '/bad-route')
+
+    expect(shouldCatch).toBeInstanceOf(Err)
+    expect((shouldCatch.unwrapErr()).message).toBe('Testing when something breaks')
+  })
+
+  it('catches errors from broken filter functions', async () => {
+    const { smartFetch } = SmartFetch
+    class CustomError extends Error { }
+
+    function shouldThrow(res: unknown) {
+      throw new CustomError('[ smartFetch ] Something went very wrong')
+      if (res) {
+        return true
+      }
+      return false
+    }
+
+
+    fetchMock.mockResponseOnce(JSON.stringify({ error: 'unrecoverable' }), { status: 200, headers: { 'content-type': 'application/json' } })
+    const res = await smartFetch<{ error: string }, CustomError>(SmartFetch.RequestMethods.GET, '/bad-route', null, {
+      shouldThrow
+    })
+
+    expect(res).toBeInstanceOf(Err)
+    expect((res.unwrapErr()).message).toBe('[ smartFetch ] Something went very wrong')
   })
 })
