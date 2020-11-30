@@ -63,7 +63,7 @@
     "baseUrl": "lib",
     "types": ["jest", "node"],
     "declaration": true,
-    "declarationDir": "dist/types",
+    // "declarationDir": "dist/types",
     "outDir": "dist",
     "paths": {
       "@/*": ["lib/*"]
