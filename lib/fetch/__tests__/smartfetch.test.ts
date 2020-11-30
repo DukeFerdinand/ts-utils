@@ -36,6 +36,55 @@ describe('SmartFetch config utils', () => {
 });
 
 describe('SmartFetch http client wrapper', () => {
+  beforeEach(() => {
+    fetchMock.mockClear();
+  });
+  it('pulls global config when window is available and local config not set', () => {
+    const { smartFetch, RequestMethods } = SmartFetch;
+    fetchMock.mockResponse(JSON.stringify({ data: 'not-needed' }));
+
+    // Global config
+    SmartFetch.initSmartFetch({
+      baseUrl: 'https://google.com',
+    });
+    smartFetch(RequestMethods.GET, '/');
+
+    expect(fetchMock).toBeCalled();
+    expect(fetchMock).toBeCalledWith('https://google.com/', {
+      method: 'GET',
+    });
+  });
+
+  it('overrides global config with local when set', () => {
+    const { smartFetch, RequestMethods } = SmartFetch;
+    fetchMock.mockResponse(JSON.stringify({ data: 'not-needed' }));
+
+    // Global config
+    SmartFetch.initSmartFetch({
+      baseUrl: 'https://google.com',
+    });
+    smartFetch(RequestMethods.GET, '/', { baseUrl: 'https://twitter.com' });
+
+    expect(fetchMock).toBeCalled();
+    expect(fetchMock).toBeCalledWith('https://twitter.com/', {
+      method: 'GET',
+    });
+  });
+
+  it('handles no baseUrl being set', () => {
+    const { smartFetch, RequestMethods } = SmartFetch;
+    fetchMock.mockResponse(JSON.stringify({ data: 'not-needed' }));
+
+    // Global config
+    SmartFetch.initSmartFetch();
+    smartFetch(RequestMethods.GET, '/');
+
+    expect(fetchMock).toBeCalled();
+    expect(fetchMock).toBeCalledWith('/', {
+      method: 'GET',
+    });
+  });
+
   it('returns good data wrapped in Ok variant', async () => {
     fetchMock.mockResponse(JSON.stringify({ ip: '70.113.52.10' }));
 
@@ -80,7 +129,6 @@ describe('SmartFetch http client wrapper', () => {
     const shouldError = await SmartFetch.smartFetch(
       SmartFetch.RequestMethods.GET,
       '/bad-route',
-      null,
       {
         shouldThrow,
       }
@@ -97,7 +145,6 @@ describe('SmartFetch http client wrapper', () => {
     const shouldNOTError = await SmartFetch.smartFetch(
       SmartFetch.RequestMethods.GET,
       '/okay-route',
-      null,
       {
         shouldThrow,
       }
@@ -140,7 +187,6 @@ describe('SmartFetch http client wrapper', () => {
     const res = await smartFetch<{ error: string }, CustomError>(
       SmartFetch.RequestMethods.GET,
       '/bad-route',
-      null,
       {
         shouldThrow,
       }
