@@ -23,7 +23,7 @@ export function initSmartFetch(config: GlobalConfig): void {
 }
 
 export function getSmartFetchConfig(): GlobalConfig {
-  return window.__SMART_FETCH_CONFIG__ || ({} as GlobalConfig);
+  return typeof window !== "undefined" ? window.__SMART_FETCH_CONFIG__ : {};
 }
 
 export async function smartFetch<T, E extends Error>(
@@ -36,7 +36,7 @@ export async function smartFetch<T, E extends Error>(
 
   // local will always override global unless otherwise allowed in the future
   let localConfig: GlobalConfig & RequestInit = {
-    ...window?.__SMART_FETCH_CONFIG__,
+    ...getSmartFetchConfig(),
     ...local,
     method,
   };
