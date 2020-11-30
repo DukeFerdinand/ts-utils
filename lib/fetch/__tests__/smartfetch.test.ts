@@ -86,14 +86,14 @@ describe('SmartFetch http client wrapper', () => {
   });
 
   it('returns good data wrapped in Ok variant', async () => {
-    fetchMock.mockResponse(JSON.stringify({ ip: '70.113.52.10' }));
+    fetchMock.mockResponse(JSON.stringify({ ip: '10.0.1.1' }));
 
     const res = await SmartFetch.smartFetch(
       SmartFetch.RequestMethods.GET,
       '/fake-ip-route?format=json'
     );
     expect(res).toBeInstanceOf(Ok);
-    expect(res.unwrap()).toEqual({ ip: '70.113.52.10' });
+    expect(res.unwrap()).toEqual({ ip: '10.0.1.1' });
   });
 
   it('returns "bad" http statuses as Err variants', async () => {
