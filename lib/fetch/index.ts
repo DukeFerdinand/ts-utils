@@ -8,7 +8,11 @@ export interface GlobalConfig<T = unknown>
   shouldThrow?: (response: T) => boolean;
 }
 
-export type LocalConfig = RequestInit;
+export type ExcludeBody<T> = Pick<T, Exclude<keyof T, 'body'>>;
+
+export type LocalConfig<B> = ExcludeBody<RequestInit> & {
+  body?: B;
+};
 
 export enum RequestMethods {
   GET = 'GET',
@@ -18,7 +22,7 @@ export enum RequestMethods {
   PATCH = 'PATCH',
 }
 
-export function initSmartFetch(config: GlobalConfig): void {
+export function initSmartFetch(config: GlobalConfig = {}): void {
   window.__SMART_FETCH_CONFIG__ = config;
 }
 
@@ -28,26 +32,31 @@ export function getSmartFetchConfig(): GlobalConfig {
 
 export async function smartFetch<T, E extends Error>(
   method: RequestMethods,
-  url: string,
-  body?: unknown,
-  config: GlobalConfig<T | E> = {}
+  uri: string,
+  config: LocalConfig<unknown> & GlobalConfig<T | E> = {}
 ): Promise<Result<T, E>> {
-  const { shouldThrow, ...local } = config;
-
-  // local will always override global unless otherwise allowed in the future
-  let localConfig: GlobalConfig & RequestInit = {
+  // Extract any extra keys from combined config, the rest turns into `localConfig`
+  const { shouldThrow, baseUrl, body, ...localConfig } = {
     ...getSmartFetchConfig(),
-    ...local,
+    ...config,
+  };
+
+  const constructedURL = `${baseUrl || ''}${uri}`;
+
+  // Attach method to final fetch config
+  let fetchConfig: GlobalConfig & LocalConfig<string> = {
+    ...localConfig,
     method,
   };
 
+  // FINALLY, attach body if required
   if (body) {
-    localConfig = { ...localConfig, body: toString(body) };
+    fetchConfig = { ...fetchConfig, body: toString(body) };
   }
 
   try {
     // Actual fetch call
-    const res = await fetch(url, localConfig);
+    const res = await fetch(constructedURL, fetchConfig);
     const parsed: T | E = await res.json();
 
     // Res isn't a 400, 500, or other custom error

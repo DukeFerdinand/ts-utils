@@ -14,6 +14,9 @@ const { smartFetch, RequestMethods } = SmartFetch;
  */
 
 describe('SmartFetch no DOM', () => {
+  beforeEach(() => {
+    fetchMock.resetMocks();
+  });
   it('still catches errors without breaking', async () => {
     const res = await smartFetch(RequestMethods.GET, '/');
 
@@ -30,5 +33,39 @@ describe('SmartFetch no DOM', () => {
 
     expect(res).toBeInstanceOf(Ok);
     expect(res).toMatchSnapshot();
+  });
+
+  it('allows global configs to be passed in via `config`', async () => {
+    fetchMock.mockResponse(JSON.stringify({ data: 'not needed' }));
+
+    // Get this from wherever and pass in at the function or service level
+    const globalConfig: SmartFetch.GlobalConfig = {
+      baseUrl: 'https://google.com',
+    };
+
+    await smartFetch(RequestMethods.GET, '/', globalConfig);
+
+    expect(fetchMock).toBeCalled();
+    expect(fetchMock).toBeCalledWith('https://google.com/', { method: 'GET' });
+  });
+
+  it('body and config do not conflict', async () => {
+    fetchMock.mockResponse(JSON.stringify({ data: 'not needed' }));
+
+    // Get this from wherever and pass in at the function or service level
+    const globalConfig: SmartFetch.GlobalConfig = {
+      baseUrl: 'https://google.com',
+    };
+
+    await smartFetch(RequestMethods.GET, '/', {
+      ...globalConfig,
+      body: { test: '' },
+    });
+
+    expect(fetchMock).toBeCalled();
+    expect(fetchMock).toBeCalledWith('https://google.com/', {
+      body: '{"test":""}',
+      method: 'GET',
+    });
   });
 });
