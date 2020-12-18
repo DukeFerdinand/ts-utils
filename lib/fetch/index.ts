@@ -12,6 +12,7 @@ export type ExcludeBody<T> = Pick<T, Exclude<keyof T, 'body'>>;
 
 export type LocalConfig<B> = ExcludeBody<RequestInit> & {
   body?: B;
+  customFetch?: FetchType;
 };
 
 export enum RequestMethods {
@@ -30,13 +31,15 @@ export function getSmartFetchConfig(): GlobalConfig {
   return typeof window !== 'undefined' ? window.__SMART_FETCH_CONFIG__ : {};
 }
 
+export type FetchType = typeof fetch;
+
 export async function smartFetch<T, E extends Error>(
   method: RequestMethods,
   uri: string,
   config: LocalConfig<unknown> & GlobalConfig<T | E> = {}
 ): Promise<Result<T, E>> {
   // Extract any extra keys from combined config, the rest turns into `localConfig`
-  const { shouldThrow, baseUrl, body, ...localConfig } = {
+  const { shouldThrow, baseUrl, body, customFetch, ...localConfig } = {
     ...getSmartFetchConfig(),
     ...config,
   };
@@ -56,7 +59,8 @@ export async function smartFetch<T, E extends Error>(
 
   try {
     // Actual fetch call
-    const res = await fetch(constructedURL, fetchConfig);
+    const fetcher = customFetch || fetch;
+    const res = await fetcher(constructedURL, fetchConfig);
     const parsed: T | E = await res.json();
 
     // Res isn't a 400, 500, or other custom error

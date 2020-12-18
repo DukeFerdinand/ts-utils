@@ -68,4 +68,27 @@ describe('SmartFetch no DOM', () => {
       method: 'GET',
     });
   });
+
+  it('uses custom fetch when passed in', async () => {
+    /**
+     * This mock represents the "fetch" options provided by things like
+     * isomorphic-unfetch and similar fetch replacers
+     */
+    const fetchFake = jest.fn();
+    const globalConfig: SmartFetch.GlobalConfig = {
+      baseUrl: 'https://google.com',
+    };
+
+    await smartFetch(RequestMethods.GET, '/', {
+      ...globalConfig,
+      body: { test: '' },
+      customFetch: fetchFake,
+    });
+
+    expect(fetchFake).toHaveBeenCalled();
+    expect(fetchFake).toBeCalledWith('https://google.com/', {
+      body: '{"test":""}',
+      method: 'GET',
+    });
+  });
 });
