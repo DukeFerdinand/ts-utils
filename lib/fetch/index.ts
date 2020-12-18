@@ -59,9 +59,8 @@ export async function smartFetch<T, E extends Error>(
 
   try {
     // Actual fetch call
-    const res = customFetch
-      ? await customFetch(constructedURL, fetchConfig)
-      : await fetch(constructedURL, fetchConfig);
+    const fetcher = customFetch || fetch;
+    const res = await fetcher(constructedURL, fetchConfig);
     const parsed: T | E = await res.json();
 
     // Res isn't a 400, 500, or other custom error
