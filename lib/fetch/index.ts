@@ -33,7 +33,31 @@ export function getSmartFetchConfig(): GlobalConfig {
 
 export type FetchType = typeof fetch;
 
-export async function smartFetch<T, E extends Error>(
+const parseFetchResult = async (res: Response) => {
+  try {
+    // Parsing body as text should always work
+    const text = await res.text()
+
+    // First try to parse as JSON
+    try {
+      return JSON.parse(text)
+    } catch(e) {
+      // Non JSON errors should include errors like the following, if not, it's a real error
+      if (!e.message.includes('Unexpected token') && !e.message.includes('Unexpected end')) {
+        throw e
+      }
+    }
+    
+    // Assume text/string response, return it
+    return text
+  } catch(e) {
+
+    // Final catcher
+    throw e
+  }
+}
+
+export async function smartFetch<T = unknown, E = Error>(
   method: RequestMethods,
   uri: string,
   config: LocalConfig<unknown> & GlobalConfig<T | E> = {}
@@ -61,7 +85,8 @@ export async function smartFetch<T, E extends Error>(
     // Actual fetch call
     const fetcher = customFetch || fetch;
     const res = await fetcher(constructedURL, fetchConfig);
-    const parsed: T | E = await res.json();
+
+    const parsed: T | E = await parseFetchResult(res);
 
     // Res isn't a 400, 500, or other custom error
     if (res.ok && !(shouldThrow && shouldThrow(parsed))) {

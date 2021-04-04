@@ -10,7 +10,7 @@ export function clone<T>(data: T): T {
   return JSON.parse(JSON.stringify(data))
 }
 
-export function toString(data: unknown): string {
+export function toString(data: unknown): string | undefined {
   if (typeof data === 'function') {
     throw new TypeError('[ ToString Error ] Cannot reliably stringify function')
   }

@@ -17,10 +17,9 @@ describe('SmartFetch no DOM', () => {
   beforeEach(() => {
     fetchMock.resetMocks();
   });
-  it('still catches errors without breaking', async () => {
+  it('catches empty responses as an empty string', async () => {
     const res = await smartFetch(RequestMethods.GET, '/');
-
-    expect(res).toBeInstanceOf(Err);
+    expect(res).toBeInstanceOf(Ok);
     expect(res).toMatchSnapshot();
   });
 

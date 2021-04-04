@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SmartFetch no DOM still catches errors without breaking 1`] = `
-Err {
-  "type": "Err",
-  "value": [FetchError: invalid json response body at  reason: Unexpected end of JSON input],
+exports[`SmartFetch no DOM catches empty responses as an empty string 1`] = `
+Ok {
+  "type": "Ok",
+  "value": "",
 }
 `;
 

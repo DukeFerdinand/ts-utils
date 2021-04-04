@@ -96,6 +96,17 @@ describe('SmartFetch http client wrapper', () => {
     expect(res.unwrap()).toEqual({ ip: '10.0.1.1' });
   });
 
+  it('returns good, non JSON data wrapped in Ok variant', async () => {
+    fetchMock.mockResponse('string response');
+
+    const res = await SmartFetch.smartFetch(
+      SmartFetch.RequestMethods.GET,
+      '/fake-ip-route?format=json'
+    );
+    expect(res).toBeInstanceOf(Ok);
+    expect(res.unwrap()).toEqual('string response');
+  });
+
   it('returns "bad" http statuses as Err variants', async () => {
     fetchMock.mockResponseOnce(JSON.stringify({ error: 'Message here' }), {
       status: 500,
